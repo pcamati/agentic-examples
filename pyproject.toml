@@ -66,5 +66,6 @@ lint.ignore = [
     "D212",   # Conflicted with D213
     "D203",   # Conflicted with D211
     "COM812", # To avoid formatting potential issues
-    "T201", # To allow printing
+    "T201",   # To allow printing
+    "BLE001", # To allow blind exceptions for simplicity
 ]
