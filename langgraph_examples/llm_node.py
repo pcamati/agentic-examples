@@ -1,0 +1,39 @@
+"""Simple LangGraph graph with a single LLM node using Ollama."""
+
+from langchain_core.messages import HumanMessage
+from langchain_ollama import ChatOllama
+from langgraph.graph import END, START, StateGraph
+from langgraph.graph.message import MessagesState
+from langgraph.graph.state import CompiledStateGraph
+
+
+def llm_node(state: MessagesState) -> dict:
+    """Call the LLM with the current message state and return the response."""
+    llm = ChatOllama(model="llama3.1:8b")
+    response = llm.invoke(state["messages"])
+    return {"messages": [response]}
+
+
+def build_graph() -> CompiledStateGraph[
+    MessagesState, None, MessagesState, MessagesState
+]:
+    """Build and compile the graph."""
+    builder = StateGraph(MessagesState)
+    builder.add_node("llm", llm_node)
+    builder.add_edge(START, "llm")
+    builder.add_edge("llm", END)
+    return builder.compile()
+
+
+def run() -> None:
+    """Run the example."""
+    graph = build_graph()
+
+    result = graph.invoke({"messages": [HumanMessage("What is Physics?")]})
+
+    for message in result["messages"]:
+        message.pretty_print()
+
+
+if __name__ == "__main__":
+    run()
