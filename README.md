@@ -64,12 +64,12 @@ uv run pre-commit run --all-files
 
 ## Ollama Setup
 
-Examples in this repository use local language models served by Ollama. The default model is **llama3.2**.
+Examples in this repository use local language models served by Ollama. The default model is **llama3.1:8b**.
 
 ### 1. Pull the model
 
 ```bash
-ollama pull llama3.2
+ollama pull llama3.1:8b
 ```
 
 You can substitute any other supported model (e.g. `mistral`, `gemma3`, `qwen2.5`):

@@ -13,7 +13,7 @@ def get_current_temperature(location: str) -> str:
 
 def run() -> None:
     """Run the example."""
-    llm = ChatOllama(model="llama3.2")
+    llm = ChatOllama(model="llama3.1:8b")
     llm_with_tools = llm.bind_tools([get_current_temperature])
 
     # JSON schema the LLM receives to understand how to call the tool
