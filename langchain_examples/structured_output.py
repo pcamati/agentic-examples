@@ -1,5 +1,5 @@
 """
-Structured output using Langchain and Ollama.
+Structured output using Langchain.
 
 Demonstrates the three distinct schema types for with_structured_output:
   1. Pydantic    - richest feature set; returns a validated Pydantic instance
@@ -9,8 +9,10 @@ Demonstrates the three distinct schema types for with_structured_output:
 
 from typing import TypedDict
 
-from langchain_ollama import ChatOllama
+from langchain_core.language_models.chat_models import BaseChatModel
 from pydantic import BaseModel, Field, ValidationError
+
+from config.llm_model import LLM_MODEL
 
 # ---------------------------------------------------------------------------
 # Schema definitions
@@ -69,7 +71,7 @@ class SongDetailsModel(BaseModel):
     genre: str = Field(description="Musical genre")
 
 
-def demonstrate_pydantic(llm: ChatOllama) -> MovieReview:
+def demonstrate_pydantic(llm: BaseChatModel) -> MovieReview:
     """Way 1: Pydantic BaseModel structured output."""
     print("WAY 1: Pydantic BaseModel")
     print("=" * 50)
@@ -125,7 +127,7 @@ def demonstrate_pydantic(llm: ChatOllama) -> MovieReview:
     return movie
 
 
-def demonstrate_typeddict(llm: ChatOllama) -> BookSummary:
+def demonstrate_typeddict(llm: BaseChatModel) -> BookSummary:
     """Way 2: TypedDict structured output."""
     print("WAY 2: TypedDict")
     print("=" * 50)
@@ -171,7 +173,7 @@ def demonstrate_typeddict(llm: ChatOllama) -> BookSummary:
     return book
 
 
-def demonstrate_json_schema(llm: ChatOllama) -> dict:
+def demonstrate_json_schema(llm: BaseChatModel) -> dict:
     """Way 3: JSON Schema (plain dict) structured output."""
     print("WAY 3: JSON Schema (plain dict)")
     print("=" * 50)
@@ -216,10 +218,8 @@ def demonstrate_json_schema(llm: ChatOllama) -> dict:
     return song
 
 
-def run() -> None:
+def run(llm: BaseChatModel) -> None:
     """Run the structured output example."""
-    llm = ChatOllama(model="llama3.1:8b")
-
     movie = demonstrate_pydantic(llm)
     book = demonstrate_typeddict(llm)
     song = demonstrate_json_schema(llm)
@@ -241,4 +241,4 @@ def run() -> None:
 
 
 if __name__ == "__main__":
-    run()
+    run(LLM_MODEL)

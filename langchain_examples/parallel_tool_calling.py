@@ -10,9 +10,11 @@ sequentially or in parallel.
 import time
 from concurrent.futures import ThreadPoolExecutor
 
+from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import HumanMessage
 from langchain_core.tools import tool
-from langchain_ollama import ChatOllama
+
+from config.llm_model import LLM_MODEL
 
 TOOL_LATENCY_SECONDS = 2  # Simulates a real network/API call
 
@@ -26,9 +28,8 @@ def get_current_temperature(location: str) -> str:
     return f"The current temperature in {location} is 22°C."
 
 
-def run() -> None:
+def run(llm: BaseChatModel) -> None:
     """Run the example."""
-    llm = ChatOllama(model="llama3.1:8b")
     llm_with_tools = llm.bind_tools([get_current_temperature])
 
     # Ask about two cities so the model issues two tool calls in one response
@@ -50,4 +51,4 @@ def run() -> None:
 
 
 if __name__ == "__main__":
-    run()
+    run(LLM_MODEL)

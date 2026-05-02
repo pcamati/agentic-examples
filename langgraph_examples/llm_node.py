@@ -1,17 +1,18 @@
-"""Simple LangGraph graph with a single LLM node using Ollama."""
+"""Simple LangGraph graph with a single LLM node."""
 
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Annotated
 
 from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_ollama import ChatOllama
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.runtime import Runtime
 from typing_extensions import TypedDict
+
+from config.llm_model import LLM_MODEL
 
 GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 THREAD_ID = "demo-thread-1"
@@ -41,12 +42,11 @@ def llm_node(state: GraphState, runtime: Runtime[Context]) -> dict:
     if not database_connection:
         error_msg = "Database connection not loaded."
         raise ValueError(error_msg)
-    llm = ChatOllama(model="llama3.1:8b")
     messages = [
         SystemMessage(f"Use this user_id: {context.user_id}"),
         *state["messages"],
     ]
-    response = llm.invoke(messages)
+    response = LLM_MODEL.invoke(messages)
     return {"messages": [response]}
 
 

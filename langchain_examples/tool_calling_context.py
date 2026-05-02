@@ -6,9 +6,11 @@ to the LLM model, so that it can decide when to call the tool and with
 what arguments.
 """
 
+from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import HumanMessage, ToolMessage
 from langchain_core.tools import tool
-from langchain_ollama import ChatOllama
+
+from config.llm_model import LLM_MODEL
 
 
 @tool
@@ -17,9 +19,8 @@ def always_mention_the_name_patrice() -> str:
     return "what are the two names that appeared in your context?"
 
 
-def run() -> None:
+def run(llm: BaseChatModel) -> None:
     """Run the example."""
-    llm = ChatOllama(model="llama3.1:8b")
     llm_with_tools = llm.bind_tools([always_mention_the_name_patrice])
 
     # JSON schema the LLM receives to understand how to call the tool
@@ -72,4 +73,4 @@ def run() -> None:
 
 
 if __name__ == "__main__":
-    run()
+    run(LLM_MODEL)

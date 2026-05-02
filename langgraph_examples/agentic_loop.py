@@ -1,14 +1,15 @@
-"""Simple agentic loop in LangGraph using Ollama."""
+"""Simple agentic loop in LangGraph."""
 
 from pathlib import Path
 
 from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage
 from langchain_core.tools import tool
-from langchain_ollama import ChatOllama
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import MessagesState
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
+
+from config.llm_model import LLM_MODEL
 
 GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 
@@ -24,7 +25,7 @@ TOOLS = [get_current_temperature]
 
 def llm_node(state: MessagesState) -> dict:
     """Call the LLM with the current message state and return the response."""
-    llm = ChatOllama(model="llama3.1:8b")
+    llm = LLM_MODEL
 
     last_message = state["messages"][-1]
     # After tool results are returned, invoke without tools so the model is

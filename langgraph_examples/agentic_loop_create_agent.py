@@ -3,9 +3,11 @@
 from pathlib import Path
 
 from langchain.agents import create_agent
+from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.tools import tool
-from langchain_ollama import ChatOllama
+
+from config.llm_model import LLM_MODEL
 
 GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 
@@ -19,9 +21,8 @@ def get_current_temperature() -> int:
 TOOLS = [get_current_temperature]
 
 
-def run() -> None:
+def run(llm: BaseChatModel) -> None:
     """Run the example."""
-    llm = ChatOllama(model="llama3.1:8b")
     agent = create_agent(
         model=llm,
         tools=TOOLS,
@@ -48,4 +49,4 @@ def run() -> None:
 
 
 if __name__ == "__main__":
-    run()
+    run(LLM_MODEL)

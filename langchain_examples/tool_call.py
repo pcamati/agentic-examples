@@ -1,8 +1,10 @@
-"""Tool call using Langchain and Ollama."""
+"""Tool call using Langchain."""
 
+from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import HumanMessage, ToolMessage
 from langchain_core.tools import tool
-from langchain_ollama import ChatOllama
+
+from config.llm_model import LLM_MODEL
 
 
 @tool
@@ -11,9 +13,8 @@ def get_current_temperature(location: str) -> str:
     return f"The current temperature in {location} is 22°C."
 
 
-def run() -> None:
+def run(llm: BaseChatModel) -> None:
     """Run the example."""
-    llm = ChatOllama(model="llama3.1:8b")
     llm_with_tools = llm.bind_tools([get_current_temperature])
 
     # JSON schema the LLM receives to understand how to call the tool
@@ -80,4 +81,4 @@ def run() -> None:
 
 
 if __name__ == "__main__":
-    run()
+    run(LLM_MODEL)

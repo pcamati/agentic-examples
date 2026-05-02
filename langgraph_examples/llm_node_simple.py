@@ -1,20 +1,20 @@
-"""Simple LangGraph graph with a single LLM node using Ollama."""
+"""Simple LangGraph graph with a single LLM node."""
 
 from pathlib import Path
 
 from langchain_core.messages import HumanMessage
-from langchain_ollama import ChatOllama
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import MessagesState
 from langgraph.graph.state import CompiledStateGraph
+
+from config.llm_model import LLM_MODEL
 
 GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 
 
 def llm_node(state: MessagesState) -> dict:
     """Call the LLM with the current message state and return the response."""
-    llm = ChatOllama(model="llama3.1:8b")
-    response = llm.invoke(state["messages"])
+    response = LLM_MODEL.invoke(state["messages"])
     return {"messages": [response]}
 
 

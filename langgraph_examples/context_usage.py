@@ -4,13 +4,15 @@ from pathlib import Path
 from typing import Annotated
 
 from langchain.messages import AnyMessage
+from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
-from langchain_ollama import ChatOllama
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.runtime import Runtime
 from pydantic import BaseModel
+
+from config.llm_model import LLM_MODEL
 
 GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 
@@ -26,12 +28,12 @@ class StaticMemory(BaseModel):
     """Static memory for the graph."""
 
     user_name: str | None
+    llm_model: BaseChatModel
 
 
 def llm_node(state: GraphState, runtime: Runtime[StaticMemory]) -> GraphState:
     """Call the LLM with the current message state and return the response."""
-    llm = ChatOllama(model="llama3.1:8b")
-    user_name = runtime.context.user_name  # noqa: F841
+    llm = runtime.context.llm_model
 
     response = llm.invoke(state.messages)
     return {"messages": [response], "previous_node": "llm_node"}
@@ -69,7 +71,7 @@ def build_graph() -> CompiledStateGraph:
     return builder.compile()
 
 
-def run() -> None:
+def run(llm: BaseChatModel) -> None:
     """Run the example."""
     graph = build_graph()
 
@@ -88,7 +90,7 @@ def run() -> None:
 
     result = graph.invoke(
         initial_messages,
-        context={"user_name": "Patrice"},
+        context={"user_name": "Patrice", "llm_model": llm},
     )
 
     for message in result["messages"]:
@@ -96,7 +98,7 @@ def run() -> None:
 
     result = graph.invoke(
         initial_messages,
-        context={"user_name": None},
+        context={"user_name": None, "llm_model": llm},
     )
 
     for message in result["messages"]:
@@ -104,4 +106,4 @@ def run() -> None:
 
 
 if __name__ == "__main__":
-    run()
+    run(LLM_MODEL)
