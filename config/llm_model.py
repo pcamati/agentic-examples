@@ -10,3 +10,8 @@ load_dotenv()
 
 LLM_MODEL = ChatOllama(model="llama3.1:8b")
 # LLM_MODEL = ChatOpenAI(model="gpt-5.4")
+
+if __name__ == "__main__":
+    # Test LLM model configuration
+    response = LLM_MODEL.invoke("What is the capital of France?")
+    print(response.content)
