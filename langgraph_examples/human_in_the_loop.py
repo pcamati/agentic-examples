@@ -1,10 +1,8 @@
 """Exploration of human-in-the-loop interactions in LangGraph."""
 
 from pathlib import Path
-from typing import Annotated, TypedDict
 
 from langchain_core.messages import (
-    AnyMessage,
     HumanMessage,
     SystemMessage,
     ToolMessage,
@@ -12,7 +10,7 @@ from langchain_core.messages import (
 from langchain_core.tools import tool
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph import END, START, StateGraph
-from langgraph.graph.message import MessagesState, add_messages
+from langgraph.graph.message import MessagesState
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
 from langgraph.types import Command, interrupt
@@ -20,14 +18,6 @@ from langgraph.types import Command, interrupt
 from config.llm_model import LLM_MODEL
 
 GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
-
-
-class GraphState(TypedDict):
-    """The state of the graph, containing the message history."""
-
-    location: str
-    temperature: int
-    messages: Annotated[list[AnyMessage], add_messages]
 
 
 @tool
@@ -119,6 +109,12 @@ def run() -> None:
 
     for message in result["messages"]:
         message.pretty_print()
+
+    history = list(graph.get_state_history(config))
+    for step, snapshot in enumerate(history[::-1]):
+        print(
+            f"Superstep {step}: state={snapshot.values}, next={snapshot.next}"
+        )
 
 
 if __name__ == "__main__":
