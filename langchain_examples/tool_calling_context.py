@@ -6,11 +6,14 @@ to the LLM model, so that it can decide when to call the tool and with
 what arguments.
 """
 
+import mlflow.langchain
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import HumanMessage, ToolMessage
 from langchain_core.tools import tool
 
 from config.llm_model import LLM_MODEL
+
+mlflow.langchain.autolog()
 
 
 @tool

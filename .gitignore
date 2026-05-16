@@ -209,3 +209,5 @@ __marimo__/
 # Data
 *.png
 .vscode
+mlruns/
+mlflow.db

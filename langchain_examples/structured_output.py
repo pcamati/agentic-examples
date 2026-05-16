@@ -9,10 +9,13 @@ Demonstrates the three distinct schema types for with_structured_output:
 
 from typing import TypedDict
 
+import mlflow.langchain
 from langchain_core.language_models.chat_models import BaseChatModel
 from pydantic import BaseModel, Field, ValidationError
 
 from config.llm_model import LLM_MODEL
+
+mlflow.langchain.autolog()
 
 # ---------------------------------------------------------------------------
 # Schema definitions

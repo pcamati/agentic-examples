@@ -3,6 +3,7 @@
 import asyncio
 from pathlib import Path
 
+import mlflow.langchain
 from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage
 from langchain_core.tools import tool
 from langgraph.config import get_stream_writer
@@ -13,6 +14,7 @@ from langgraph.prebuilt import ToolNode, tools_condition
 
 from config.llm_model import LLM_MODEL
 
+mlflow.langchain.autolog()
 GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 
 

@@ -3,6 +3,7 @@
 from pathlib import Path
 from typing import Annotated
 
+import mlflow.langchain
 from langchain.messages import AnyMessage
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
@@ -13,6 +14,8 @@ from langgraph.runtime import Runtime
 from pydantic import BaseModel
 
 from config.llm_model import LLM_MODEL
+
+mlflow.langchain.autolog()
 
 GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 

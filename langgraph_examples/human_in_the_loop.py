@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+import mlflow.langchain
 from langchain_core.messages import (
     HumanMessage,
     SystemMessage,
@@ -16,6 +17,8 @@ from langgraph.prebuilt import ToolNode, tools_condition
 from langgraph.types import Command, interrupt
 
 from config.llm_model import LLM_MODEL
+
+mlflow.langchain.autolog()
 
 GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 

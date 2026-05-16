@@ -2,12 +2,15 @@
 
 from pathlib import Path
 
+import mlflow.langchain
 from langchain_core.messages import HumanMessage
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import MessagesState
 from langgraph.graph.state import CompiledStateGraph
 
 from config.llm_model import LLM_MODEL
+
+mlflow.langchain.autolog()
 
 GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 

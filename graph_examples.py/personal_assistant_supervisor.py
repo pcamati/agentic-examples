@@ -18,11 +18,13 @@ There are three layers:
 
 from pathlib import Path
 
+import mlflow.langchain
 from langchain.agents import create_agent
 from langchain.tools import tool
 
 from config.llm_model import LLM_MODEL
 
+mlflow.langchain.autolog()
 GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 
 

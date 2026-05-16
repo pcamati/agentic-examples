@@ -10,11 +10,14 @@ sequentially or in parallel.
 import time
 from concurrent.futures import ThreadPoolExecutor
 
+import mlflow.langchain
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import HumanMessage
 from langchain_core.tools import tool
 
 from config.llm_model import LLM_MODEL
+
+mlflow.langchain.autolog()
 
 TOOL_LATENCY_SECONDS = 2  # Simulates a real network/API call
 

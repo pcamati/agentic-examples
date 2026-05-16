@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Annotated
 
+import mlflow.langchain
 from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, START, StateGraph
@@ -13,6 +14,8 @@ from langgraph.runtime import Runtime
 from typing_extensions import TypedDict
 
 from config.llm_model import LLM_MODEL
+
+mlflow.langchain.autolog()
 
 GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 THREAD_ID = "demo-thread-1"

@@ -1,8 +1,11 @@
 """LLM call using Langchain."""
 
+import mlflow.langchain
 from langchain_core.language_models.chat_models import BaseChatModel
 
 from config.llm_model import LLM_MODEL
+
+mlflow.langchain.autolog()
 
 
 def run(llm: BaseChatModel) -> None:

@@ -7,6 +7,7 @@ Link: https://doi.org/10.1145/1807167.1807184
 import time
 from typing import TYPE_CHECKING, TypedDict
 
+import mlflow.langchain
 from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph import START, StateGraph
@@ -14,6 +15,8 @@ from langgraph.types import Command
 
 if TYPE_CHECKING:
     from langchain_core.runnables import RunnableConfig
+
+mlflow.langchain.autolog()
 
 SLEEP_TIME = 5
 
