@@ -2,14 +2,15 @@
 
 from dotenv import load_dotenv
 from langchain_ollama import ChatOllama
-
-# from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI
 
 load_dotenv()
 
 
 LLM_MODEL = ChatOllama(model="llama3.1:8b")
-# LLM_MODEL = ChatOpenAI(model="gpt-5.4")
+
+# Configure OPENAI_API_KEY in .env
+LLM_MODEL = ChatOpenAI(model="gpt-5-nano-2025-08-07")
 
 if __name__ == "__main__":
     # Test LLM model configuration
