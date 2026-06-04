@@ -12,7 +12,6 @@ Parent graph
 
 import operator
 import time
-from pathlib import Path
 from typing import Annotated, TypedDict
 
 import mlflow.langchain
@@ -24,7 +23,6 @@ from utils.utils import save_mermaid_png
 
 mlflow.langchain.autolog()
 
-GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 PARENT_THREAD_ID = "parent-thread"
 DELAY = 10
 
@@ -170,7 +168,7 @@ def run() -> None:
     checkpointer = MemorySaver()
 
     parent_graph = build_parent_graph(checkpointer)
-    save_mermaid_png(parent_graph)
+    save_mermaid_png(parent_graph, __file__)
 
     parent_config = {"configurable": {"thread_id": PARENT_THREAD_ID}}
 

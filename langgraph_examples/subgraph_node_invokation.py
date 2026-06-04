@@ -11,7 +11,6 @@ Parent graph
 """
 
 import operator
-from pathlib import Path
 from typing import Annotated, TypedDict
 
 import mlflow.langchain
@@ -24,7 +23,6 @@ from utils.utils import save_mermaid_png
 
 mlflow.langchain.autolog()
 
-GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 PARENT_THREAD_ID = "parent-thread"
 ANALYZER_THREAD_ID = "analyzer-thread"
 TRANSFORMER_THREAD_ID = "transformer-thread"
@@ -179,7 +177,7 @@ def run() -> None:
     transformer_subgraph = build_transformer_subgraph(checkpointer)
 
     parent_graph = build_graph(checkpointer)
-    save_mermaid_png(parent_graph)
+    save_mermaid_png(parent_graph, __file__)
 
     # Different threads are important because they do not share state
     parent_config = {"configurable": {"thread_id": PARENT_THREAD_ID}}

@@ -32,7 +32,6 @@ correctly appended to the state with the custom reducer function.
 
 """
 
-from pathlib import Path
 from typing import Annotated
 
 import mlflow.langchain
@@ -52,7 +51,6 @@ from utils.utils import save_mermaid_png
 
 mlflow.langchain.autolog()
 
-GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 THREAD_ID = "demo-thread-1"
 
 
@@ -215,7 +213,7 @@ def run() -> None:
     """Run the example."""
     checkpointer = MemorySaver()
     graph = build_graph(checkpointer)
-    save_mermaid_png(graph)
+    save_mermaid_png(graph, __file__)
 
     config = {"configurable": {"thread_id": THREAD_ID}}
 
