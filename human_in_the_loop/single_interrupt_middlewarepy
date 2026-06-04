@@ -1,0 +1,92 @@
+"""Single interrupt using create_agent with HumanInTheLoopMiddleware."""
+
+import mlflow.langchain
+from langchain.agents import create_agent
+from langchain.agents.middleware import HumanInTheLoopMiddleware
+from langchain_core.language_models.chat_models import BaseChatModel
+from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.tools import tool
+from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.types import Command
+
+from config.llm_model import LLM_MODEL
+from utils.utils import save_mermaid_png
+
+mlflow.langchain.autolog()
+
+
+@tool
+def get_temperature_from_database(
+    location: str,
+) -> dict[str, str | int]:
+    """
+    Read the current temperature for a given location from a database.
+
+    Args:
+        location: The location to get the temperature for.
+
+    Returns:
+        A dictionary containing the location and its current temperature.
+
+    """
+    return {"location": location, "temperature": 25}
+
+
+TOOLS = [get_temperature_from_database]
+
+
+def run(llm: BaseChatModel) -> None:
+    """Run the example."""
+    agent = create_agent(
+        model=llm,
+        tools=TOOLS,
+        system_prompt=SystemMessage(
+            "You are a helpful climate assistant. Respond the user query."
+        ),
+        checkpointer=InMemorySaver(),
+        middleware=[
+            HumanInTheLoopMiddleware(
+                interrupt_on={get_temperature_from_database.name: True}
+            )
+        ],
+    )
+
+    save_mermaid_png(agent, __file__)
+
+    config = {"configurable": {"thread_id": "1"}}
+    result = agent.invoke(
+        {
+            "messages": [
+                HumanMessage("What is the current temperature in Paris?")
+            ]
+        },
+        config=config,
+        version="v2",
+    )
+
+    interrupt_value = result.interrupts[0].value
+    action = interrupt_value["action_requests"][0]
+    print(f"\n{action['description']}")
+
+    while True:
+        user_response = input("Reply yes or no: ")
+        if user_response.lower() in ["yes", "no"]:
+            break
+
+    decision = (
+        {"type": "approve"}
+        if user_response.lower() == "yes"
+        else {"type": "reject"}
+    )
+    result = agent.invoke(
+        Command(resume={"decisions": [decision]}),
+        config=config,
+        version="v2",
+    )
+
+    for message in result["messages"]:
+        message.pretty_print()
+
+
+if __name__ == "__main__":
+    run(LLM_MODEL)
