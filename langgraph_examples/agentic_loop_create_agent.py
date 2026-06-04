@@ -1,7 +1,5 @@
 """Simple agentic loop in LangChain using create_agent."""
 
-from pathlib import Path
-
 import mlflow.langchain
 from langchain.agents import create_agent
 from langchain_core.language_models.chat_models import BaseChatModel
@@ -9,10 +7,9 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.tools import tool
 
 from config.llm_model import LLM_MODEL
+from utils.utils import save_mermaid_png
 
 mlflow.langchain.autolog()
-
-GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 
 
 @tool
@@ -34,8 +31,7 @@ def run(llm: BaseChatModel) -> None:
         ),
     )
 
-    png_data = agent.get_graph().draw_mermaid_png()
-    GRAPH_PNG_PATH.write_bytes(png_data)
+    save_mermaid_png(agent, __file__)
 
     result = agent.invoke(
         {

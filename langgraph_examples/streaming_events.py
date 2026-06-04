@@ -1,7 +1,6 @@
 """Simple agentic streaming events in LangGraph."""
 
 import asyncio
-from pathlib import Path
 
 import mlflow.langchain
 from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage
@@ -13,9 +12,9 @@ from langgraph.graph.state import CompiledStateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
 
 from config.llm_model import LLM_MODEL
+from utils.utils import save_mermaid_png
 
 mlflow.langchain.autolog()
-GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 
 
 @tool
@@ -110,8 +109,7 @@ async def run() -> None:
     """Run the example."""
     graph = build_graph()
 
-    png_data = graph.get_graph().draw_mermaid_png()
-    GRAPH_PNG_PATH.write_bytes(png_data)
+    save_mermaid_png(graph, __file__)
 
     system_message = SystemMessage(
         "You are a helpful climate assistant. Respond the user query."

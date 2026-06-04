@@ -21,8 +21,6 @@ UpdatesTransformer via the `transformers=` argument to also surface "custom"
 and "updates" methods.
 """
 
-from pathlib import Path
-
 import mlflow.langchain
 from langchain_core.messages import (
     AIMessageChunk,
@@ -39,9 +37,9 @@ from langgraph.prebuilt import ToolNode, tools_condition
 from langgraph.stream.transformers import CustomTransformer, UpdatesTransformer
 
 from config.llm_model import LLM_MODEL
+from utils.utils import save_mermaid_png
 
 mlflow.langchain.autolog()
-GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 
 
 @tool
@@ -242,8 +240,7 @@ def run() -> None:
     """Run the example."""
     graph = build_graph()
 
-    png_data = graph.get_graph().draw_mermaid_png()
-    GRAPH_PNG_PATH.write_bytes(png_data)
+    save_mermaid_png(graph, __file__)
 
     system_message = SystemMessage(
         "You are a helpful climate assistant. Respond the user query."

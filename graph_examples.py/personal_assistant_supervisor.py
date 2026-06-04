@@ -16,16 +16,14 @@ There are three layers:
 
 """
 
-from pathlib import Path
-
 import mlflow.langchain
 from langchain.agents import create_agent
 from langchain.tools import tool
 
 from config.llm_model import LLM_MODEL
+from utils.utils import save_mermaid_png
 
 mlflow.langchain.autolog()
-GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 
 
 # ============================================================================
@@ -183,8 +181,7 @@ if __name__ == "__main__":
     print("User Request:", user_request)
     print("\n" + "=" * 80 + "\n")
 
-    png_data = supervisor_agent.get_graph().draw_mermaid_png()
-    GRAPH_PNG_PATH.write_bytes(png_data)
+    save_mermaid_png(supervisor_agent, __file__)
 
     for step in supervisor_agent.stream(
         {"messages": [{"role": "user", "content": user_request}]}

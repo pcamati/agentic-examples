@@ -1,6 +1,5 @@
 """Example usage of contexts in LangGraph."""
 
-from pathlib import Path
 from typing import Annotated
 
 import mlflow.langchain
@@ -14,10 +13,9 @@ from langgraph.runtime import Runtime
 from pydantic import BaseModel
 
 from config.llm_model import LLM_MODEL
+from utils.utils import save_mermaid_png
 
 mlflow.langchain.autolog()
-
-GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 
 
 class GraphState(BaseModel):
@@ -78,8 +76,7 @@ def run(llm: BaseChatModel) -> None:
     """Run the example."""
     graph = build_graph()
 
-    png_data = graph.get_graph().draw_mermaid_png()
-    GRAPH_PNG_PATH.write_bytes(png_data)
+    save_mermaid_png(graph, __file__)
 
     system_message = SystemMessage("You reply as concisely as possible.")
     human_message = HumanMessage("What is Physics?")

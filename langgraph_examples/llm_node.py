@@ -1,7 +1,6 @@
 """Simple LangGraph graph with a single LLM node."""
 
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Annotated
 
 import mlflow.langchain
@@ -14,10 +13,10 @@ from langgraph.runtime import Runtime
 from typing_extensions import TypedDict
 
 from config.llm_model import LLM_MODEL
+from utils.utils import save_mermaid_png
 
 mlflow.langchain.autolog()
 
-GRAPH_PNG_PATH = Path(__file__).parent / "latest_graph_run.png"
 THREAD_ID = "demo-thread-1"
 
 
@@ -115,8 +114,7 @@ def run() -> None:
     print("Context JSON schema:", graph.get_context_jsonschema())
     print("=" * 50)
 
-    png_data = drawable.draw_mermaid_png()
-    GRAPH_PNG_PATH.write_bytes(png_data)
+    save_mermaid_png(graph, __file__)
 
     context = Context(database_connection="connection_here", user_id="alice")
 
